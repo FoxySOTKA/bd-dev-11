@@ -322,13 +322,41 @@ test_db=# EXPLAIN SELECT * FROM clients WHERE заказ IS NOT NULL;
 
 Поднимите новый пустой контейнер с PostgreSQL.
 
-Восстановите БД test_db в новом контейнере.
-
-Приведите список операций, который вы применяли для бэкапа данных и восстановления. 
+Восстановите БД test_db в новом контейнере. 
 
 #### Ответ:
 
+*Список операций:*
+1) Создаю бэкап БД test_db и помещаю его в volume, предназначенный для бэкапов:
+```sql
+wolin@wolinubuntu:~/netology/06-db-02-sql$ docker exec -it postgres bash
 
+root@6d11af5b8868:/# pg_dump -U admin-user -Fc test_db > ./backup/1test_db_backup.psql
+root@6d11af5b8868:/# exit
+```
+
+---
+
+2) Остановливаю контейнер с PostgreSQL, но при этом не удаляю volumes:
+```sql
+ wolin@wolinubuntu:~/netology/06-db-02-sql$ docker stop postgres
+```
+
+---
+
+3) Поднимаю новый пустой контейнер с PostgreSQL:
+```sql
+wolin@wolinubuntu:~/netology/06-db-02-sql$ docker run --rm -d -e POSTGRES_USER=admin-user -e POSTGRES_PASSWORD=2Netology -e POSTGRES_DB=test_db -v ./backup:/backup --name postgres2 postgres:13.3
+```
+
+---
+
+4) Восстановливаю БД test_db в новом контейнере:
+```sql
+wolin@wolinubuntu:~/netology/06-db-02-sql$ docker exec -it postgres2 bash
+
+root@119a68dc6b92:/# pg_restore -O -U admin-user -d test_db /backup/1test_db_backup.psql
+```
 
 ---
 
