@@ -62,11 +62,17 @@ mysql> SELECT COUNT(price) FROM orders WHERE price NOT BETWEEN 0 and 300;
 
 Предоставьте привелегии пользователю `test` на операции SELECT базы `test_db`.
     
-Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES, получите данные по пользователю `test` и 
-**приведите в ответе к задаче**.
-
 #### Ответ:
 
+Использую таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES и получаю данные по пользователю `test`:
+```
+mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER = 'test';
++------+-----------+------------------------------------------------+
+| USER | HOST      | ATTRIBUTE                                      |
++------+-----------+------------------------------------------------+
+| test | localhost | {"last_name": "Pretty", "first_name": "James"} |
++------+-----------+------------------------------------------------+
+```
 
 
 ### Задача 3
