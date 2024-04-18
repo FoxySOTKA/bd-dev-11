@@ -88,7 +88,45 @@ mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER = 'test';
 
 #### Ответ:
 
+- какой `engine` используется в таблице БД `test_db`:
+```
+mysql> SHOW CREATE TABLE orders\G;
+*************************** 1. row ***************************
+       Table: orders
+Create Table: CREATE TABLE `orders` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(80) NOT NULL,
+  `price` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+1 row in set (0.00 sec)
+```
+ENGINE=InnoDB
 
+---
+
+- время выполнения и запрос на изменения из профайлера на `MyISAM` и на `InnoDB`:
+```
+mysql> SET @@profiling = 1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = MyISAM;
+Query OK, 5 rows affected (0.05 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (0.07 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SHOW PROFILES;
++----------+------------+------------------------------------+
+| Query_ID | Duration   | Query                              |
++----------+------------+------------------------------------+
+|       19 | 0.04230900 | ALTER TABLE orders ENGINE = MyISAM |
+|       20 | 0.07169550 | ALTER TABLE orders ENGINE = InnoDB |
++----------+------------+------------------------------------+
+2 rows in set, 1 warning (0.00 sec)
+```
 
 ### Задача 4 
 
