@@ -8,19 +8,35 @@
 
 Подключитесь к БД PostgreSQL, используя `psql`.
 
-Воспользуйтесь командой `\?` для вывода подсказки по имеющимся в `psql` управляющим командам.
-
-**Найдите и приведите** управляющие команды для:
-
-- вывода списка БД,
-- подключения к БД,
-- вывода списка таблиц,
-- вывода описания содержимого таблиц,
-- выхода из psql.
+Воспользуйтесь командой `\?` для вывода подсказки по имеющимся в `psql` управляющим командам. 
 
 #### Ответ:
 
-
+*Управляющие команды для:*
+- вывода списка БД:
+```
+\l[+] [PATTERN] list databases
+```
+- подключения к БД:
+```
+Connection \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
+connect to new database (currently "postgres")
+\conninfo display information about current connection
+\encoding [ENCODING] show or set client encoding
+\password [USERNAME] securely change the password for a user
+```
+- вывода списка таблиц:
+```
+\dt[S+] [PATTERN] list tables
+```
+- вывода описания содержимого таблиц:
+```
+\d[S+] NAME describe table, view, sequence, or index
+```
+- выхода из psql:
+```
+\q
+```
 
 ### Задача 2
 
