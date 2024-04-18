@@ -127,7 +127,9 @@ mysql> SHOW PROFILES;
 +----------+------------+------------------------------------+
 2 rows in set, 1 warning (0.00 sec)
 ```
-
+Для MyISAM время составило 0.04230900;
+Для InnoDB время понадобилось больше и составило 0.07169550.
+ 
 ### Задача 4 
 
 Изучите файл `my.cnf` в директории /etc/mysql.
@@ -140,10 +142,27 @@ mysql> SHOW PROFILES;
 - буффер кеширования 30% от ОЗУ;
 - размер файла логов операций 100 Мб.
 
-Приведите в ответе изменённый файл `my.cnf`.
-
 #### Ответ:
 
+Изменённый файл `my.cnf`:
+```
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+bind-address=0.0.0.0
+server-id=1
+log_bin=/var/log/mysql/mybin.log
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+innodb_flush_log_at_trx_commit = 0  # скорость IO важнее сохранности данных;
+innodb_file_per_table = ON          # нужна компрессия таблиц для экономии места на диске;
+innodb_log_buffer_size = 1M         # размер буффера с незакомиченными транзакциями 1 Мб;
+innodb_buffer_pool_size = 2G        # буффер кеширования 30% от ОЗУ;
+innodb_log_file_size = 100M         # размер файла логов операций 100 Мб.
+```
 
 
 ---
