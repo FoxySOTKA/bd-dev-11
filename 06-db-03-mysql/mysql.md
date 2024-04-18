@@ -22,8 +22,31 @@
 В следующих заданиях мы будем продолжать работу с этим контейнером.
 
 #### Ответ:
+Вывод команды выдачи статуса БД:
+```
+Server version: 8.0.34 MySQL Community Server - GPL
+```
 
+---
 
+количество записей с `price` > 300:
+```
+mysql> SELECT id, title, price FROM orders WHERE price NOT BETWEEN 0 and 300;
++----+----------------+-------+
+| id | title          | price |
++----+----------------+-------+
+|  2 | My little pony |   500 |
++----+----------------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT COUNT(price) FROM orders WHERE price NOT BETWEEN 0 and 300;
++--------------+
+| COUNT(price) |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+```
 
 ### Задача 2
 
