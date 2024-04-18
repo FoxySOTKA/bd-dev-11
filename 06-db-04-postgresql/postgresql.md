@@ -53,11 +53,67 @@ connect to new database (currently "postgres")
 Используя таблицу [pg_stats](https://postgrespro.ru/docs/postgresql/12/view-pg-stats), найдите столбец таблицы `orders` 
 с наибольшим средним значением размера элементов в байтах.
 
-**Приведите в ответе** команду, которую вы использовали для вычисления, и полученный результат.
-
 #### Ответ:
 
+Команда, которую я использовал для вычисления:
+```
+analyze verbose public.orders
+```
+Полученный результат:
+```
+postgres=# CREATE DATABASE test_database;
+CREATE DATABASE
 
+postgres=# \q
+
+root@9c8e31391e7a:/# psql -U admin-user -f /backup/test_dump.sql test_database
+SET
+SET
+SET
+SET
+SET
+ set_config 
+------------
+ 
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+psql:/backup/test_dump.sql:34: ERROR:  role "postgres" does not exist
+CREATE SEQUENCE
+psql:/backup/test_dump.sql:49: ERROR:  role "postgres" does not exist
+ALTER SEQUENCE
+ALTER TABLE
+COPY 8
+ setval 
+--------
+      8
+(1 row)
+
+ALTER TABLE
+
+root@9c8e31391e7a:/# psql -U admin-user test_database
+psql (13.0 (Debian 13.0-1.pgdg100+1))
+Type "help" for help.
+
+test_database=# ANALYZE VERBOSE public.orders;
+INFO:  analyzing "public.orders"
+INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
+ANALYZE
+                                                    ^
+test_database=# SELECT avg_width FROM pg_stats WHERE tablename='orders';
+ avg_width 
+-----------
+         4
+        16
+         4
+(3 rows)
+```
 
 ### Задача 3
 
