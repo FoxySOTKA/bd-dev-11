@@ -121,13 +121,48 @@ test_database=# SELECT avg_width FROM pg_stats WHERE tablename='orders';
 поиск по ней занимает долгое время. Вам как успешному выпускнику курсов DevOps в Нетологии предложили
 провести разбиение таблицы на 2: шардировать на orders_1 - price>499 и orders_2 - price<=499.
 
-Предложите SQL-транзакцию для проведения этой операции.
-
-Можно ли было изначально исключить ручное разбиение при проектировании таблицы orders?
-
 #### Ответ:
 
+SQL-транзакция для проведения разбиения таблицы на orders_1 - price>499 и на orders_2 - price<=499:
+```
+test_database=# CREATE TABLE orders_1 (CHECK (price > 499)) INHERITS (orders);
+CREATE TABLE
+test_database=# INSERT INTO orders_1 SELECT * FROM orders WHERE price > 499;
+INSERT 0 3
+test_database=# CREATE TABLE orders_2 (CHECK (price <= 499)) INHERITS (orders);
+CREATE TABLE
+test_database=# INSERT INTO orders_2 SELECT * FROM orders WHERE price <= 499;
+INSERT 0 5
+test_database=# \dt+
+                                List of relations
+ Schema |   Name   | Type  |   Owner    | Persistence |    Size    | Description 
+--------+----------+-------+------------+-------------+------------+-------------
+ public | orders   | table | admin-user | permanent   | 8192 bytes | 
+ public | orders_1 | table | admin-user | permanent   | 8192 bytes | 
+ public | orders_2 | table | admin-user | permanent   | 8192 bytes | 
+(3 rows)
+```
 
+---
+
+Но можно было изначально исключить ручное разбиение при проектировании таблицы 'orders', сделав ее **секционированной таблицей**, при этом используя *FROM TO* границы каждого диапазона принимая их как включающие в нижней части и исключающие в верхней части.
+
+Далее приведу пример как это реализовать:
+```
+CREATE TABLE orders (
+    id              serial not null,
+    title           character varying(80) not null,
+    price           integer
+) PARTITION BY RANGE (price);
+
+CREATE TABLE orders_less_499 PARTITION OF orders
+    FOR VALUES FROM (MINVALUE) TO (500);
+ALTER TABLE orders_less_499 ADD PRIMARY KEY (id);
+
+CREATE TABLE orders_more_499 PARTITION OF orders
+    FOR VALUES FROM (500) TO (MAXVALUE);
+ALTER TABLE orders_more_499 ADD PRIMARY KEY (id);
+```
 
 ### Задача 4
 
