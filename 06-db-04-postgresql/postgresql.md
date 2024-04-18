@@ -168,11 +168,16 @@ ALTER TABLE orders_more_499 ADD PRIMARY KEY (id);
 
 Используя утилиту `pg_dump`, создайте бекап БД `test_database`.
 
-Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца `title` для таблиц `test_database`?
-
 #### Ответ:
 
-
+Я бы, дорабатывая бэкап-файл (чтобы добавить уникальность значения столбца `title` для таблиц `test_database`), просто добавил бы *UNIQUE* вот таким образом:
+```
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    title character varying(80) UNIQUE NOT NULL,
+    price integer DEFAULT 0
+);
+```
 
 ---
 
